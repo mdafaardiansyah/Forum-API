@@ -10,7 +10,10 @@
     "test:watch:change": "jest --watch --setupFiles dotenv/config -i",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
     "migrate": "node-pg-migrate",
-    "migrate:test": "node-pg-migrate -f config/database/test.json"
+    "migrate:test": "node-pg-migrate -f config/database/test.json",
+    "migration:create": "node scripts/generate-migration.js create",
+    "migration:list": "node scripts/generate-migration.js list",
+    "migration:help": "node scripts/generate-migration.js"
   },
   "keywords": [],
   "author": "",
