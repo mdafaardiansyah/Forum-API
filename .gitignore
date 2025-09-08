@@ -9,10 +9,16 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Uncomment if you want to ignore lock files (not recommended for production)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
 .pnpm-debug.log*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
 
 # ===========================
 # Environment Variables
@@ -23,6 +29,26 @@ pnpm-lock.yaml
 .env.test.local
 .env.production.local
 .env.*.local
+
+# CRITICAL: Development environment files with real credentials
+config/environments/development.env
+config/environments/.env.development
+development.env
+
+# Docker Compose files with hardcoded credentials
+docker-compose.dev.yml
+docker-compose.override.yml
+
+# Environment configuration files with credentials
+config/environments/production.env
+config/environments/.env.override
+
+# Any .env files in subdirectories
+**/development.env
+**/production.env
+**/.env.local
+**/.env.development
+**/.env.production
 
 # ===========================
 # Build & Output Directories
@@ -168,12 +194,41 @@ coverage/
 .pytest_cache/
 .tox/
 
+# Jest
+jest.config.local.js
+.jest/
+
+# Mocha
+.mocharc.local.json
+
+# Test results
+test-results/
+test-output/
+junit.xml
+
+# Performance testing
+performance-results/
+*.perf
+
 # ===========================
 # Docker
 # ===========================
 Dockerfile.local
 docker-compose.override.yml
+docker-compose.local.yml
 .dockerignore.local
+
+# Docker volumes and data
+docker-data/
+postgres-data/
+mysql-data/
+redis-data/
+
+# Docker build context
+.docker/
+
+# Container logs
+container-logs/
 
 # ===========================
 # Miscellaneous
@@ -189,16 +244,63 @@ typings/
 .dynamodb/
 .tern-port
 
+
+DEPLOYMENT.md
+FOLDER_STRUCTURE.md
+
 # ===========================
-# Project Specific
+# Project Specific - Forum API
 # ===========================
 # Trae AI IDE
 .trae
 
-# Add any other project-specific files here
-# uploads/
-# temp/
-# backup/
+# Test coverage output
+coverage_output.txt
+
+# Debug files
+debug.js
+simple-test.js
+
+# SSL certificates (keep structure, ignore actual certificates)
+ssl/*.pem
+ssl/*.key
+ssl/*.crt
+config/ssl/certificates/*
+!config/ssl/certificates/.gitkeep
+
+# Nginx logs
+nginx_logs/
+*.access.log
+*.error.log
+
+# Database migration backups
+migrations/backup/
+
+# Development tools output
+tools/output/
+
+# Temporary upload files
+uploads/temp/
+uploads/cache/
+
+# Backup files
+backup/
+*.backup
+*.bak
+
+# Local development overrides
+docker-compose.local.yml
+.env.override
+config/environments/.env.override
+
+# PM2 process files
+ecosystem.config.js.local
+.pm2/
+
+# Application logs
+logs/app/
+logs/error/
+logs/access/
 
 # ===========================
 # End of .gitignore
