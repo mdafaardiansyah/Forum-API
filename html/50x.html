@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error - Forum API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .error-code {
+            font-size: 6rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .error-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .error-message {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .error-details {
+            background: #f8f9fa;
+            border-left: 4px solid #e74c3c;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: left;
+            border-radius: 4px;
+        }
+        
+        .error-details h3 {
+            color: #e74c3c;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .error-details p {
+            color: #555;
+            margin: 0.5rem 0;
+        }
+        
+        .actions {
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e74c3c;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+        
+        .footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ecf0f1;
+            font-size: 0.9rem;
+            color: #95a5a6;
+        }
+        
+        .retry-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .retry-section h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+        
+        .retry-section p {
+            color: #856404;
+            margin: 0;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .error-code {
+                font-size: 4rem;
+            }
+            
+            .error-title {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-code">5xx</div>
+        <h1 class="error-title">
+            <span class="status-indicator"></span>
+            Server Error
+        </h1>
+        <p class="error-message">
+            We're experiencing technical difficulties. Our team has been notified and is working to resolve the issue.
+        </p>
+        
+        <div class="error-details">
+            <h3>What happened?</h3>
+            <p>The server encountered an internal error and was unable to complete your request.</p>
+            <p>This could be due to:</p>
+            <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                <li>Temporary server overload</li>
+                <li>Database connectivity issues</li>
+                <li>Application maintenance</li>
+                <li>Unexpected system error</li>
+            </ul>
+        </div>
+        
+        <div class="retry-section">
+            <h4>What can you do?</h4>
+            <p>Please try again in a few moments. If the problem persists, contact our support team.</p>
+        </div>
+        
+        <div class="actions">
+            <button onclick="location.reload()" class="btn">Try Again</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+            <a href="/" class="btn btn-secondary">Home Page</a>
+        </div>
+        
+        <div class="footer">
+            <p>Forum API v2 | Error ID: <span id="errorId"></span></p>
+            <p>If you need assistance, please include the Error ID when contacting support.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Generate unique error ID for tracking
+        function generateErrorId() {
+            const timestamp = Date.now().toString(36);
+            const random = Math.random().toString(36).substr(2, 5);
+            return `ERR-${timestamp}-${random}`.toUpperCase();
+        }
+        
+        document.getElementById('errorId').textContent = generateErrorId();
+        
+        // Auto-retry mechanism
+        let retryCount = 0;
+        const maxRetries = 3;
+        
+        function autoRetry() {
+            if (retryCount < maxRetries) {
+                retryCount++;
+                setTimeout(() => {
+                    console.log(`Auto-retry attempt ${retryCount}/${maxRetries}`);
+                    // In a real scenario, this would make an API call to check server status
+                    // For now, we'll just show a message
+                    if (retryCount === maxRetries) {
+                        const retrySection = document.querySelector('.retry-section');
+                        retrySection.innerHTML = `
+                            <h4>Multiple retry attempts failed</h4>
+                            <p>The server appears to be experiencing ongoing issues. Please try again later or contact support.</p>
+                        `;
+                        retrySection.style.background = '#f8d7da';
+                        retrySection.style.borderColor = '#f5c6cb';
+                        retrySection.style.color = '#721c24';
+                    }
+                }, 5000 * retryCount); // Exponential backoff
+            }
+        }
+        
+        // Start auto-retry after 10 seconds
+        setTimeout(autoRetry, 10000);
+        
+        // Log error for debugging (in production, this would send to monitoring service)
+        console.error('Server Error 5xx occurred at:', new Date().toISOString());
+    </script>
+</body>
+</html>
