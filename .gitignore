@@ -302,6 +302,12 @@ logs/app/
 logs/error/
 logs/access/
 
+
+CICD.md
+GITHUB_SECRETS.md
+
+requirements/
+
 # ===========================
 # End of .gitignore
 # =============================================================================
