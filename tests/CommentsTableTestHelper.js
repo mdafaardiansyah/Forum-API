@@ -5,16 +5,19 @@ const CommentsTableTestHelper = {
   async addComment({
     id = 'comment-123',
     content = 'sebuah comment',
-    thread_id = 'thread-123',
+    threadId = 'thread-123',
+    thread_id = threadId,
     owner = 'user-123',
     is_delete = false,
     date = new Date().toISOString(),
     created_at = new Date().toISOString(),
     updated_at = new Date().toISOString(),
+    likeCount = 0,
+    like_count = likeCount,
   }) {
     const query = {
-      text: 'INSERT INTO comments (id, thread_id, content, owner, is_delete, date, created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
-      values: [id, thread_id, content, owner, is_delete, date, created_at, updated_at],
+      text: 'INSERT INTO comments (id, thread_id, content, owner, is_delete, date, created_at, updated_at, like_count) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+      values: [id, thread_id, content, owner, is_delete, date, created_at, updated_at, like_count],
     };
 
     await pool.query(query);
