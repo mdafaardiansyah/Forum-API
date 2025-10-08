@@ -92,27 +92,12 @@ describe('HTTP server', () => {
     // Arrange
     const originalEnv = process.env.FORCE_HTTPS;
     process.env.FORCE_HTTPS = 'true';
-    
-    // Mock request object to simulate error in HTTPS enforcement
-    const mockRequest = {
-      headers: {
-        'x-forwarded-proto': 'http',
-        host: 'example.com'
-      },
-      url: {
-        pathname: '/test',
-        search: '?param=value'
-      },
-      info: {
-        host: null // This will cause an error in HTTPS enforcement
-      }
-    };
-    
+
     const server = await createServer({});
-    
+
     // Simulate the HTTPS enforcement middleware with error
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    
+
     try {
       // Action - This should trigger the error handling in HTTPS enforcement
       const response = await server.inject({
@@ -120,10 +105,10 @@ describe('HTTP server', () => {
         url: '/test?param=value',
         headers: {
           'x-forwarded-proto': 'http',
-          host: 'example.com'
-        }
+          host: 'example.com',
+        },
       });
-      
+
       // Assert - Should continue despite error
       expect(response.statusCode).toBeDefined();
     } finally {
@@ -136,22 +121,25 @@ describe('HTTP server', () => {
     // Arrange
     const originalEnv = process.env.DISABLE_RATE_LIMIT;
     process.env.DISABLE_RATE_LIMIT = 'true';
-    
+
     const server = await createServer({});
-    
+
     try {
       // Action - Make multiple requests that would normally be rate limited
       const responses = [];
-      for (let i = 0; i < 5; i++) {
+      const requestCount = 5;
+
+      for (let i = 0; i < requestCount; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
         const response = await server.inject({
           method: 'GET',
-          url: '/'
+          url: '/',
         });
         responses.push(response);
       }
-      
+
       // Assert - All requests should succeed (no rate limiting)
-      responses.forEach(response => {
+      responses.forEach((response) => {
         expect(response.statusCode).toEqual(200);
       });
     } finally {
@@ -162,28 +150,28 @@ describe('HTTP server', () => {
   it('should reset rate limit counter when window has passed', async () => {
     // Arrange
     const server = await createServer({});
-    
+
     // Mock Date.now to control time
     const originalDateNow = Date.now;
     let mockTime = 1000000000000; // Start time
     Date.now = jest.fn(() => mockTime);
-    
+
     try {
       // Action - Make initial request
       await server.inject({
         method: 'GET',
-        url: '/'
+        url: '/',
       });
-      
+
       // Advance time beyond window (60000ms + 1)
       mockTime += 60001;
-      
+
       // Make another request - should reset counter
       const response = await server.inject({
         method: 'GET',
-        url: '/'
+        url: '/',
       });
-      
+
       // Assert - Request should succeed (counter was reset)
       expect(response.statusCode).toEqual(200);
     } finally {
@@ -195,22 +183,22 @@ describe('HTTP server', () => {
     // Arrange
     const originalEnv = process.env.DISABLE_RATE_LIMIT;
     delete process.env.DISABLE_RATE_LIMIT;
-    
+
     const server = await createServer({});
     const originalDateNow = Date.now;
     let mockTime = 1000000000000;
     Date.now = jest.fn(() => mockTime);
-    
+
     try {
       // First request to initialize rate limit data
       await server.inject({ method: 'GET', url: '/', headers: { 'x-forwarded-for': '192.168.1.1' } });
-      
+
       // Advance time past the window to trigger reset (line 44: now >= rateLimitData.resetTime)
       mockTime += 60001;
-      
+
       // This request should trigger lines 45-46: rateLimitData.count = 0; rateLimitData.resetTime = now + windowMs;
       const response = await server.inject({ method: 'GET', url: '/', headers: { 'x-forwarded-for': '192.168.1.1' } });
-      
+
       expect(response.statusCode).toEqual(200);
     } finally {
       Date.now = originalDateNow;
@@ -220,22 +208,20 @@ describe('HTTP server', () => {
     }
   });
 
-
-
   it('should apply rate limiting when DISABLE_RATE_LIMIT is not true', async () => {
     // Arrange
     const originalEnv = process.env.DISABLE_RATE_LIMIT;
     process.env.DISABLE_RATE_LIMIT = 'false'; // Set to false to test line 20 condition
-    
+
     try {
       const server = await createServer({});
-      
+
       // Action - Make a request when rate limiting is enabled
       const response = await server.inject({
         method: 'GET',
-        url: '/'
+        url: '/',
       });
-      
+
       // Assert - Should process normally (rate limiting is active)
       expect(response.statusCode).toEqual(200);
     } finally {
@@ -246,6 +232,4 @@ describe('HTTP server', () => {
       }
     }
   });
-
-
 });

@@ -62,7 +62,7 @@ describe('HealthHandler', () => {
           data: expect.objectContaining({
             environment: 'development',
           }),
-        })
+        }),
       );
 
       // Cleanup
@@ -84,7 +84,7 @@ describe('HealthHandler', () => {
           data: expect.objectContaining({
             version: '1.0.0',
           }),
-        })
+        }),
       );
 
       // Cleanup
@@ -97,7 +97,7 @@ describe('HealthHandler', () => {
 
       // Assert
       const callArgs = mockH.response.mock.calls[0][0];
-      const timestamp = callArgs.data.timestamp;
+      const { timestamp } = callArgs.data;
       expect(timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
       expect(new Date(timestamp).toISOString()).toBe(timestamp);
     });
@@ -108,7 +108,7 @@ describe('HealthHandler', () => {
 
       // Assert
       const callArgs = mockH.response.mock.calls[0][0];
-      const uptime = callArgs.data.uptime;
+      const { uptime } = callArgs.data;
       expect(typeof uptime).toBe('number');
       expect(uptime).toBeGreaterThanOrEqual(0);
     });
@@ -122,7 +122,7 @@ describe('HealthHandler', () => {
       // Assert
       expect(handler.getHealthHandler).toBeDefined();
       expect(typeof handler.getHealthHandler).toBe('function');
-      
+
       // Test that the method is properly bound
       const { getHealthHandler } = handler;
       expect(() => getHealthHandler(mockRequest, mockH)).not.toThrow();

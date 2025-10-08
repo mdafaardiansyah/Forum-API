@@ -75,12 +75,12 @@ describe('LikeRepositoryPostgres', () => {
         userId: 'user-123',
       });
       const fakeIdGenerator = () => '123';
-      
+
       // Mock pool to throw a different database error
       const mockPool = {
-        query: jest.fn().mockRejectedValue(new Error('Database connection error'))
+        query: jest.fn().mockRejectedValue(new Error('Database connection error')),
       };
-      
+
       const likeRepositoryPostgres = new LikeRepositoryPostgres(mockPool, fakeIdGenerator);
 
       // Action & Assert

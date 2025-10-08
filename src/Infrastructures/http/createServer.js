@@ -45,15 +45,15 @@ const rateLimitMiddleware = {
         rateLimitData.count = 0;
         rateLimitData.resetTime = now + windowMs;
       }
-      
+
       // Increment counter first, then check limit (atomic operation)
       rateLimitData.count += 1;
-      
+
       // Debug logging for tests
       if (process.env.NODE_ENV === 'test') {
         console.log(`Rate limit debug - IP: ${ip}, Count: ${rateLimitData.count}, Max: ${maxRequests}, Path: ${request.path}`);
       }
-      
+
       // Check if limit exceeded after incrementing
       if (rateLimitData.count > maxRequests) {
         if (process.env.NODE_ENV === 'test') {

@@ -129,7 +129,7 @@ describe('Rate Limiting Middleware', () => {
       }
 
       const initialResponses = await Promise.all(initialRequests);
-      
+
       // Then make additional requests that should be rate limited
       const additionalRequests = [];
       for (let i = 90; i < 95; i += 1) {
@@ -318,7 +318,7 @@ describe('Rate Limiting Middleware', () => {
       }
 
       const initialResponses = await Promise.all(initialRequests);
-      
+
       // Then make additional requests that should be rate limited
       const additionalRequests = [];
       for (let i = 45; i < 50; i += 1) {

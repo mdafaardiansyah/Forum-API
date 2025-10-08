@@ -1,7 +1,9 @@
 const NewLike = require('../../Domains/likes/entities/NewLike');
 
 class ToggleLikeUseCase {
-  constructor({ likeRepository, commentRepository, userRepository, threadRepository }) {
+  constructor({
+    likeRepository, commentRepository, userRepository, threadRepository,
+  }) {
     this._likeRepository = likeRepository;
     this._commentRepository = commentRepository;
     this._userRepository = userRepository;
