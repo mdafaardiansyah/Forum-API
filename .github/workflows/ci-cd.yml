@@ -8,6 +8,9 @@ name: CI/CD Pipeline
 # - ACCESS_TOKEN_KEY_TEST: JWT access token key for testing
 # - REFRESH_TOKEN_KEY_TEST: JWT refresh token key for testing
 # - REDIS_PASSWORD_TEST: Redis password for testing (optional)
+# - HEROKU_API_KEY: Heroku API token for CI deploy (from Account Settings)
+# - ACCESS_TOKEN_KEY_PROD: JWT access token key for production
+# - REFRESH_TOKEN_KEY_PROD: JWT refresh token key for production
 #
 # Required GitHub Variables (Repository Settings > Secrets and variables > Actions):
 # - POSTGRES_TEST_DB: Test database name (fallback: 'forumapi_test')
@@ -17,6 +20,8 @@ name: CI/CD Pipeline
 # - ACCESS_TOKEN_AGE: JWT token expiration time (fallback: '3000')
 # - REDIS_HOST_TEST: Redis host for testing (fallback: 'localhost')
 # - REDIS_PORT_TEST: Redis port for testing (fallback: '6379')
+# - HEROKU_APP_NAME: Heroku app name (e.g., 'my-forum-api')
+# - FORUM_API_BASE_URL_HTTPS: Public HTTPS base URL via Cloudflare (e.g., 'https://api.example.com')
 # =============================================================================
 
 on:
@@ -215,21 +220,78 @@ jobs:
     environment: production
     
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Download build artifact
       uses: actions/download-artifact@v3
       with:
         name: forum-api-build
     
-    - name: Deploy to production
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Install Heroku CLI
       run: |
-        echo "Deploying to production environment..."
-        # Add your production deployment commands here
-        # Example: Docker deployment, Kubernetes, or cloud service deployment
+        curl https://cli-assets.heroku.com/install.sh | sh
+    
+    - name: Git remote add Heroku
+      run: |
+        heroku git:remote -a ${{ vars.HEROKU_APP_NAME }}
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    
+    - name: Authenticate Heroku
+      run: |
+        heroku auth:token
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+    - name: Set Heroku config vars
+      run: |
+        heroku config:set \
+          NODE_ENV=production \
+          ACCESS_TOKEN_KEY="${{ secrets.ACCESS_TOKEN_KEY_PROD }}" \
+          REFRESH_TOKEN_KEY="${{ secrets.REFRESH_TOKEN_KEY_PROD }}" \
+          ACCESS_TOKEN_AGE="${{ vars.ACCESS_TOKEN_AGE || '3000' }}" \
+          --app ${{ vars.HEROKU_APP_NAME }}
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    
+    - name: Push to Heroku
+      run: |
+        git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ vars.HEROKU_APP_NAME }}.git HEAD:main
+    
+    - name: Run migrations on Heroku
+      run: |
+        heroku run npm run migrate up --app ${{ vars.HEROKU_APP_NAME }}
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    
+    - name: Run Postman tests against HTTPS
+      run: |
+        npm install -g newman newman-reporter-htmlextra
+        newman run "docs/api/postman/v1/Forum API V1 Test.postman_collection.json" \
+          -e "docs/api/postman/v1/Forum API V1 Test.postman_environment.json" \
+          --env-var baseUrl=${{ vars.FORUM_API_BASE_URL_HTTPS }} \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export newman-report.html
+    
+    - name: Upload Newman HTML report
+      uses: actions/upload-artifact@v3
+      with:
+        name: postman-newman-report
+        path: newman-report.html
     
     - name: Run health check
       run: |
-        echo "Running health check on production..."
-        # Add health check commands here
+        curl -f ${{ vars.FORUM_API_BASE_URL_HTTPS }}/health || exit 1
     
     - name: Notify deployment success
       run: |
