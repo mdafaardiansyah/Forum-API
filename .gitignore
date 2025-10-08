@@ -21,8 +21,25 @@ yarn-error.log*
 .pnp.*
 
 # ===========================
-# Environment Variables
+# Environment Variables (additional hardening)
 # ===========================
+# Ignore any .env files anywhere
+**/.env
+**/.env.*
+
+# Ignore environment templates that may accidentally contain real creds
+config/environments/*.env
+
+# Explicitly ignore test env file and any envs under config/environments
+config/environments/test.env
+config/environments/*.local
+
+# Ignore local override files
+*.local.env
+*.env.local
+
+# Ensure example stays tracked
+!.env.example
 .env
 .env.local
 .env.development.local
