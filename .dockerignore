@@ -1,0 +1,76 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage
+*.lcov
+.nyc_output
+
+# Development
+.env.development
+.env.local
+.env.test
+
+# Environment (sensitive)
+.env
+.env.*
+!.env.example
+config/environments/
+config/environments/*.env
+config/environments/*.key
+config/environments/*.pem
+config/environments/*.crt
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+.circleci
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+*.md
+
+# Tests
+tests
+__tests__
+*.test.js
+*.spec.js
+jest.config.js
+
+# Linting
+.eslintrc*
+.eslintignore
+.prettierrc*
+.prettierignore
+
+# Misc
+.auditrc.json
+Dockerfile*
+docker-compose*

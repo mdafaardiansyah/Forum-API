@@ -1,21 +1,21 @@
 class UserRepository {
-  async addUser(registerUser) {
+  async addUser(_registerUser) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async verifyAvailableUsername(username) {
+  async verifyAvailableUsername(_username) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async getPasswordByUsername(username) {
+  async getPasswordByUsername(_username) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async getIdByUsername(username) {
+  async getIdByUsername(_username) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async verifyUserExists(userId) {
+  async verifyUserExists(_userId) {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 }

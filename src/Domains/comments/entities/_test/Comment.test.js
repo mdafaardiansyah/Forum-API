@@ -48,6 +48,7 @@ describe('a Comment entities', () => {
     expect(comment.date).toEqual(payload.date);
     expect(comment.username).toEqual(payload.username);
     expect(comment.replies).toEqual(payload.replies);
+    expect(comment.likeCount).toEqual(0);
   });
 
   it('should create comment object correctly when isDelete is true', () => {
@@ -225,5 +226,44 @@ describe('a Comment entities', () => {
 
     // Action and Assert
     expect(() => new Comment(payload)).toThrowError('COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
+  });
+
+  it('should throw error when likeCount is not a number', () => {
+    // Arrange
+    const payload = {
+      id: 'comment-123',
+      content: 'sebuah comment',
+      date: '2021-08-08T07:19:09.775Z',
+      username: 'dicoding',
+      isDelete: false,
+      likeCount: 'invalid',
+    };
+
+    // Action and Assert
+    expect(() => new Comment(payload)).toThrowError('COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
+  });
+
+  it('should create comment object with likeCount correctly', () => {
+    // Arrange
+    const payload = {
+      id: 'comment-123',
+      content: 'sebuah comment',
+      date: '2021-08-08T07:19:09.775Z',
+      username: 'dicoding',
+      isDelete: false,
+      replies: [],
+      likeCount: 5,
+    };
+
+    // Action
+    const comment = new Comment(payload);
+
+    // Assert
+    expect(comment.id).toEqual(payload.id);
+    expect(comment.content).toEqual(payload.content);
+    expect(comment.date).toEqual(payload.date);
+    expect(comment.username).toEqual(payload.username);
+    expect(comment.replies).toEqual(payload.replies);
+    expect(comment.likeCount).toEqual(5);
   });
 });

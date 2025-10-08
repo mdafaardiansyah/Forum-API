@@ -1,9 +1,7 @@
-const InvariantError = require('../../Commons/exceptions/InvariantError');
 const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
 const CommentRepository = require('../../Domains/comments/CommentRepository');
 const AddedComment = require('../../Domains/comments/entities/AddedComment');
-const Comment = require('../../Domains/comments/entities/Comment');
 
 class CommentRepositoryPostgres extends CommentRepository {
   constructor(pool, idGenerator) {
@@ -111,6 +109,29 @@ class CommentRepositoryPostgres extends CommentRepository {
       ...row,
       date: row.date.toISOString(),
     }));
+  }
+
+  async getLikeCountByCommentId(commentId) {
+    const query = {
+      text: 'SELECT COUNT(*) as like_count FROM comment_likes WHERE comment_id = $1',
+      values: [commentId],
+    };
+
+    const result = await this._pool.query(query);
+    return parseInt(result.rows[0].like_count, 10);
+  }
+
+  async verifyCommentInThread(commentId, threadId) {
+    const query = {
+      text: 'SELECT id FROM comments WHERE id = $1 AND thread_id = $2',
+      values: [commentId, threadId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('komentar tidak ditemukan dalam thread ini');
+    }
   }
 }
 

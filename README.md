@@ -7,6 +7,15 @@
 
 Forum API adalah aplikasi backend RESTful API yang dibangun menggunakan Node.js dan Hapi.js framework. Aplikasi ini menyediakan layanan untuk sistem forum diskusi dengan fitur autentikasi, manajemen thread, komentar, dan balasan.
 
+## 🏗️ Arsitektur
+
+Proyek ini menggunakan **Clean Architecture** dengan pemisahan yang jelas antara:
+
+- **Domain Layer**: Entitas bisnis dan aturan bisnis
+- **Application Layer**: Use cases dan logika aplikasi
+- **Infrastructure Layer**: Implementasi teknis (database, external services)
+- **Interface Layer**: Controllers, routes, dan presentasi
+
 ## 🚀 Fitur Utama
 
 - **Autentikasi & Autorisasi**: Sistem login/logout dengan JWT token
@@ -14,9 +23,11 @@ Forum API adalah aplikasi backend RESTful API yang dibangun menggunakan Node.js 
 - **Thread Management**: Membuat, membaca, dan menghapus thread diskusi
 - **Sistem Komentar**: Menambah, membaca, dan menghapus komentar pada thread
 - **Sistem Balasan**: Menambah balasan pada komentar (nested comments)
+- **Sistem Like**: Fitur like/unlike untuk thread dan komentar
 - **Validasi Input**: Validasi komprehensif menggunakan Joi
 - **Database Migration**: Sistem migrasi database yang terstruktur
 - **Testing**: Unit test dan integration test yang lengkap
+- **Code Quality Tools**: ESLint, code validators, dan generators
 
 ## 🛠️ Teknologi yang Digunakan
 
@@ -138,6 +149,121 @@ npm run migrate list
 
 📖 **Dokumentasi lengkap**: [Migration Generator Guide](docs/migration-generator.md)
 
+## 📁 Struktur Folder
+
+```
+Forum-API/
+├── config/                     # Konfigurasi aplikasi
+│   ├── database/               # Konfigurasi database
+│   │   └── config.js          # Database config untuk semua environment
+│   ├── environments/           # Environment-specific configurations
+│   │   ├── development.env    # Development environment
+│   │   ├── production.env     # Production environment
+│   │   └── test.env          # Test environment
+│   ├── nginx/                 # Nginx configuration files
+│   └── ssl/                   # SSL certificates
+│       └── certificates/
+├── docs/                       # Dokumentasi
+│   ├── api/                   # API documentation
+│   │   └── postman/          # Postman collections
+│   ├── architecture/          # Architecture documentation
+│   │   └── clean-architecture.md
+│   ├── deployment/            # Deployment guides
+│   │   └── CICD.md           # CI/CD documentation
+│   ├── development/           # Development guides
+│   └── requirements/          # Requirements and specifications
+│       └── v2.md             # API v2 requirements
+├── migrations/                 # Database migrations
+├── scripts/                    # Utility scripts
+│   ├── database/              # Database-related scripts
+│   │   └── migrate.js        # Migration runner
+│   ├── deployment/            # Deployment scripts
+│   │   └── deploy.js         # Deployment automation
+│   └── development/           # Development scripts
+│       └── dev-setup.js      # Development environment setup
+├── src/                        # Source code (Clean Architecture)
+│   ├── Applications/          # Application Layer
+│   │   ├── security/         # Security utilities
+│   │   ├── use_case/         # Use cases
+│   │   └── validation/       # Input validation
+│   ├── Commons/              # Shared utilities
+│   │   └── exceptions/       # Custom exceptions
+│   ├── Domains/              # Domain Layer
+│   │   ├── authentications/  # Authentication domain
+│   │   ├── comments/         # Comments domain
+│   │   ├── likes/           # Likes domain
+│   │   ├── replies/         # Replies domain
+│   │   ├── threads/         # Threads domain
+│   │   └── users/           # Users domain
+│   ├── Infrastructures/      # Infrastructure Layer
+│   │   ├── container/       # Dependency injection
+│   │   ├── database/        # Database connections
+│   │   ├── http/           # HTTP client
+│   │   ├── repository/     # Repository implementations
+│   │   └── security/       # Security implementations
+│   ├── Interfaces/          # Interface Layer
+│   │   └── http/           # HTTP interfaces
+│   │       ├── api/        # API routes and handlers
+│   │       └── middleware/ # HTTP middleware
+│   └── app.js              # Application entry point
+├── tests/                     # Test files
+├── tools/                     # Development tools
+│   ├── generators/           # Code generators
+│   │   └── entity-generator.js
+│   └── validators/           # Code validators
+│       └── code-validator.js
+├── .env                      # Environment variables (development)
+├── .gitignore               # Git ignore rules
+├── package.json             # NPM dependencies and scripts
+└── README.md               # This file
+```
+
+### Penjelasan Struktur
+
+#### Clean Architecture Layers
+
+1. **Domain Layer** (`src/Domains/`)
+   - Contains business entities and repository interfaces
+   - No dependencies on external frameworks
+   - Pure business logic
+
+2. **Application Layer** (`src/Applications/`)
+   - Contains use cases and application services
+   - Orchestrates domain objects
+   - Depends only on Domain layer
+
+3. **Infrastructure Layer** (`src/Infrastructures/`)
+   - Contains implementations of repository interfaces
+   - Database access, external APIs, etc.
+   - Depends on Domain and Application layers
+
+4. **Interface Layer** (`src/Interfaces/`)
+   - Contains controllers, routes, middleware
+   - Handles HTTP requests/responses
+   - Depends on all inner layers
+
+#### Configuration (`config/`)
+- **environments/**: Environment-specific configuration files
+- **database/**: Database configuration for all environments
+- **nginx/**: Web server configuration
+- **ssl/**: SSL certificates and security configs
+
+#### Documentation (`docs/`)
+- **api/**: API documentation and Postman collections
+- **architecture/**: Architecture guides and diagrams
+- **deployment/**: Deployment and CI/CD documentation
+- **development/**: Development setup and guidelines
+- **requirements/**: Project requirements and specifications
+
+#### Scripts (`scripts/`)
+- **database/**: Database migration and management scripts
+- **deployment/**: Automated deployment scripts
+- **development/**: Development environment setup scripts
+
+#### Tools (`tools/`)
+- **generators/**: Code generation utilities
+- **validators/**: Code quality and architecture validation tools
+
 ## 🧪 Testing
 
 ### Menjalankan semua test
@@ -152,7 +278,84 @@ npm run test:watch
 
 ### Test dengan coverage
 ```bash
-npm run test:watch
+npm run test:coverage
+```
+
+## 🛠️ Development Tools
+
+### Code Generator
+Generate boilerplate code for new entities:
+```bash
+node tools/generators/entity-generator.js
+```
+
+Tool ini akan membantu Anda membuat:
+- Domain entities
+- Repository interfaces dan implementations
+- Use cases
+- Test files
+- Handler dan routes
+
+### Code Validator
+Validate code quality and architecture compliance:
+```bash
+node tools/validators/code-validator.js
+```
+
+Validasi yang dilakukan:
+- Clean Architecture layer dependencies
+- File naming conventions
+- Repository implementations
+- Security patterns
+- Test coverage
+- Code style dengan ESLint
+
+### Database Migration Scripts
+Manage database migrations:
+```bash
+# Run migrations
+node scripts/database/migrate.js up
+
+# Rollback migrations
+node scripts/database/migrate.js down
+
+# Check migration status
+node scripts/database/migrate.js status
+
+# Create new migration
+node scripts/database/migrate.js create "migration_name"
+
+# Reset database
+node scripts/database/migrate.js reset
+```
+
+### Development Setup
+Setup development environment:
+```bash
+node scripts/development/dev-setup.js
+```
+
+Script ini akan:
+- Install dependencies
+- Setup environment files
+- Check database connection
+- Create necessary directories
+- Run verification tests
+
+### Deployment Scripts
+Deploy to various environments:
+```bash
+# Deploy to staging
+node scripts/deployment/deploy.js staging
+
+# Deploy to production
+node scripts/deployment/deploy.js production
+
+# Deploy to Heroku
+node scripts/deployment/deploy.js heroku
+
+# Deploy with Docker
+node scripts/deployment/deploy.js docker
 ```
 
 ## 📚 API Documentation

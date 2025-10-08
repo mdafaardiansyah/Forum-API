@@ -9,11 +9,16 @@
     "test": "jest --setupFiles dotenv/config -i",
     "test:watch:change": "jest --watch --setupFiles dotenv/config -i",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
+    "test:coverage": "jest --coverage --setupFiles dotenv/config -i",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate -f config/database/test.json",
     "migration:create": "node scripts/generate-migration.js create",
     "migration:list": "node scripts/generate-migration.js list",
-    "migration:help": "node scripts/generate-migration.js"
+    "migration:help": "node scripts/generate-migration.js",
+    "audit:security": "npm audit --audit-level=high",
+    "audit:deps": "npx audit-ci --config .auditrc.json"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +28,7 @@
     "@hapi/jwt": "^2.0.1",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
+    "helmet": "^8.1.0",
     "instances-container": "^2.0.3",
     "nanoid": "^3.1.23",
     "pg": "^8.6.0"
@@ -35,5 +41,22 @@
     "jest": "^27.0.6",
     "node-pg-migrate": "^5.10.0",
     "nodemon": "^2.0.9"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/_test/**",
+      "!src/**/__mocks__/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   }
 }

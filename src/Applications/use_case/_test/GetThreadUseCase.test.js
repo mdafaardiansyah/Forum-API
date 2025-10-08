@@ -55,6 +55,8 @@ describe('GetThreadDetailUseCase', () => {
       .mockImplementation(() => Promise.resolve(expectedThread));
     mockCommentRepository.getCommentsByThreadId = jest.fn()
       .mockImplementation(() => Promise.resolve(expectedComments));
+    mockCommentRepository.getLikeCountByCommentId = jest.fn()
+      .mockImplementation(() => Promise.resolve(0));
     mockReplyRepository.getRepliesByCommentId = jest.fn()
       .mockImplementation(() => Promise.resolve(expectedReplies));
 

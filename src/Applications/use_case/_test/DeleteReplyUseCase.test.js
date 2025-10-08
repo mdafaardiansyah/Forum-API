@@ -36,7 +36,9 @@ describe('DeleteReplyUseCase', () => {
     });
 
     // Action
-    await deleteReplyUseCase.execute({ threadId, commentId, replyId, owner });
+    await deleteReplyUseCase.execute({
+      threadId, commentId, replyId, owner,
+    });
 
     // Assert
     expect(mockThreadRepository.verifyThreadExists).toBeCalledWith(threadId);

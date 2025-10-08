@@ -11,20 +11,21 @@ class GetThreadDetailUseCase {
 
   async execute(useCasePayload) {
     const { threadId } = useCasePayload;
-    
+
     // Verify thread exists
     await this._threadRepository.verifyThreadExists(threadId);
-    
+
     // Get thread detail
     const thread = await this._threadRepository.getDetailThreadById(threadId);
-    
+
     // Get comments for the thread
     const comments = await this._commentRepository.getCommentsByThreadId(threadId);
-    
-    // Get replies for each comment
+
+    // Get replies and like count for each comment
     const commentsWithReplies = await Promise.all(
       comments.map(async (comment) => {
         const replies = await this._replyRepository.getRepliesByCommentId(comment.id);
+        const likeCount = await this._commentRepository.getLikeCountByCommentId(comment.id);
         const mappedReplies = replies.map((reply) => new Reply({
           id: reply.id,
           content: reply.content,
@@ -32,7 +33,7 @@ class GetThreadDetailUseCase {
           username: reply.username,
           isDelete: reply.is_delete,
         }));
-        
+
         return new Comment({
           id: comment.id,
           content: comment.content,
@@ -40,10 +41,11 @@ class GetThreadDetailUseCase {
           username: comment.username,
           isDelete: comment.is_delete,
           replies: mappedReplies,
+          likeCount,
         });
-      })
+      }),
     );
-    
+
     return new DetailThread({
       id: thread.id,
       title: thread.title,

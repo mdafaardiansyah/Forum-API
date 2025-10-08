@@ -2,7 +2,9 @@ class Reply {
   constructor(payload) {
     this._verifyPayload(payload);
 
-    const { id, content, date, username, isDelete } = payload;
+    const {
+      id, content, date, username, isDelete,
+    } = payload;
 
     this.id = id;
     this.content = isDelete ? '**balasan telah dihapus**' : content;
@@ -10,7 +12,9 @@ class Reply {
     this.username = username;
   }
 
-  _verifyPayload({ id, content, date, username, isDelete }) {
+  _verifyPayload({
+    id, content, date, username, isDelete,
+  }) {
     if (!id || !content || !date || !username || isDelete === undefined) {
       throw new Error('REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
     }

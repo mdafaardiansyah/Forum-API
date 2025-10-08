@@ -9,6 +9,21 @@ const testConfig = {
   database: process.env.PGDATABASE_TEST,
 };
 
-const pool = process.env.NODE_ENV === 'test' ? new Pool(testConfig) : new Pool();
+const isTest = process.env.NODE_ENV === 'test';
+let pool;
+
+if (isTest) {
+  pool = new Pool(testConfig);
+} else if (process.env.DATABASE_URL) {
+  // Heroku provides DATABASE_URL and requires SSL
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
+} else {
+  pool = new Pool();
+}
 
 module.exports = pool;
