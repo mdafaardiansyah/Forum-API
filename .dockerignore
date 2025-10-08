@@ -14,6 +14,16 @@ coverage
 .env.local
 .env.test
 
+# Environment (sensitive)
+.env
+.env.*
+!.env.example
+config/environments/
+config/environments/*.env
+config/environments/*.key
+config/environments/*.pem
+config/environments/*.crt
+
 # IDE
 .vscode
 .idea
