@@ -80,7 +80,7 @@ describe('logging middleware', () => {
 
     // Assert
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringMatching(/\[.*\] GET \/test - IP: .* - User-Agent: Unknown/),
+      expect.stringMatching(/\[.*\] GET \/test - IP: .* - User-Agent: shot/),
     );
   });
 

@@ -9,7 +9,7 @@ const loggingMiddleware = {
       } = request;
       const methodUpper = method.toUpperCase();
       const { remoteAddress: ip } = info;
-      const userAgent = headers['user-agent'] || 'Unknown';
+      const userAgent = headers['user-agent'] || headers['User-Agent'] || 'Unknown';
 
       console.log(`[${timestamp}] ${methodUpper} ${path} - IP: ${ip} - User-Agent: ${userAgent}`);
 
