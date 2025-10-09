@@ -91,14 +91,50 @@ jobs:
         RATE_LIMIT_MAX=1000
         EOF
 
+    - name: Create test database config
+      run: |
+        mkdir -p config/database
+        cat > config/database/test.json << EOF
+        {
+          "user": "postgres",
+          "password": "postgres",
+          "host": "localhost",
+          "port": 5432,
+          "database": "forumapi_test"
+        }
+        EOF
+
     - name: Run database migrations
-      run: npm run migrate:test
+      run: |
+        export PGHOST=localhost
+        export PGPORT=5432
+        export PGUSER=postgres
+        export PGPASSWORD=postgres
+        export PGDATABASE=forumapi_test
+        npm run migrate:test up
+      env:
+        PGHOST: localhost
+        PGPORT: 5432
+        PGUSER: postgres
+        PGPASSWORD: postgres
+        PGDATABASE: forumapi_test
 
     - name: Run linting
       run: npm run lint
 
     - name: Run tests with coverage
       run: npm run test:ci
+      env:
+        NODE_ENV: test
+        PGHOST: localhost
+        PGPORT: 5432
+        PGUSER: postgres
+        PGPASSWORD: postgres
+        PGDATABASE: forumapi_test
+        ACCESS_TOKEN_KEY: super_secret_access_token_key_for_testing_minimum_32_chars
+        REFRESH_TOKEN_KEY: super_secret_refresh_token_key_for_testing_minimum_32_chars
+        ACCESS_TOKEN_AGE: 900
+        REFRESH_TOKEN_AGE: 604800
 
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
