@@ -1,0 +1,93 @@
+{
+  "name": "forum-api",
+  "description": "Forum API - Backend service for forum application with authentication and thread management",
+  "repository": "https://github.com/your-username/forum-api",
+  "logo": "https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg",
+  "keywords": [
+    "nodejs",
+    "hapi",
+    "postgresql",
+    "jwt",
+    "forum",
+    "api",
+    "backend"
+  ],
+  "image": "heroku/nodejs",
+  "stack": "heroku-22",
+  "addons": [
+    {
+      "plan": "heroku-postgresql:mini",
+      "as": "DATABASE"
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Node.js environment mode",
+      "value": "production",
+      "required": true
+    },
+    "HOST": {
+      "description": "Server host",
+      "value": "0.0.0.0",
+      "required": true
+    },
+    "PORT": {
+      "description": "Server port (automatically set by Heroku)",
+      "required": false
+    },
+    "ACCESS_TOKEN_KEY": {
+      "description": "JWT access token secret key (minimum 32 characters)",
+      "generator": "secret",
+      "required": true
+    },
+    "REFRESH_TOKEN_KEY": {
+      "description": "JWT refresh token secret key (minimum 32 characters)",
+      "generator": "secret",
+      "required": true
+    },
+    "ACCESS_TOKEN_AGE": {
+      "description": "Access token expiration time in seconds",
+      "value": "900",
+      "required": true
+    },
+    "REFRESH_TOKEN_AGE": {
+      "description": "Refresh token expiration time in seconds",
+      "value": "604800",
+      "required": true
+    },
+    "LOG_LEVEL": {
+      "description": "Logging level",
+      "value": "info",
+      "required": true
+    },
+    "DETAILED_ERRORS": {
+      "description": "Enable detailed error messages",
+      "value": "false",
+      "required": true
+    },
+    "ENABLE_DOCS": {
+      "description": "Enable API documentation endpoint",
+      "value": "false",
+      "required": true
+    },
+    "RATE_LIMIT_MAX": {
+      "description": "Rate limit max requests per minute",
+      "value": "100",
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "scripts": {
+    "postdeploy": "npm run migrate:prod"
+  }
+}

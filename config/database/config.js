@@ -30,11 +30,7 @@ const config = {
     }
   },
   production: {
-    host: process.env.PGHOST,
-    port: process.env.PGPORT,
-    username: process.env.PGUSER,
-    password: process.env.PGPASSWORD,
-    database: process.env.PGDATABASE,
+    use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
     logging: false,
     pool: {
@@ -46,6 +42,12 @@ const config = {
     ssl: {
       require: true,
       rejectUnauthorized: false
+    },
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
     }
   }
 };

@@ -10,15 +10,22 @@
     "test:watch:change": "jest --watch --setupFiles dotenv/config -i",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
     "test:coverage": "jest --coverage --setupFiles dotenv/config -i",
+    "test:ci": "jest --setupFiles dotenv/config -i --coverage --watchAll=false",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "migrate": "node-pg-migrate",
+    "migrate:prod": "node-pg-migrate -m migrations",
     "migrate:test": "node-pg-migrate -f config/database/test.json",
     "migration:create": "node scripts/generate-migration.js create",
     "migration:list": "node scripts/generate-migration.js list",
     "migration:help": "node scripts/generate-migration.js",
     "audit:security": "npm audit --audit-level=high",
-    "audit:deps": "npx audit-ci --config .auditrc.json"
+    "audit:deps": "npx audit-ci --config .auditrc.json",
+    "heroku-postbuild": "npm run migrate:prod"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
   },
   "keywords": [],
   "author": "",
